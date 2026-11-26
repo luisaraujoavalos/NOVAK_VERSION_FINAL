@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>NOVAK · Generar 02_datos_iniciales.sql</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 24px; color: #1b1b1f; }
+        pre { background: #f4f4f2; padding: 16px; max-height: 70vh; overflow: auto; font-size: 12px; }
+        button { padding: 10px 16px; font-weight: 700; cursor: pointer; }
+    </style>
+    <!-- Herramienta interna: NO se publica en la tienda. Usa tu js/datos.js real. -->
+    <script src="../js/datos.js"></script>
+</head>
+<body>
+    <h1>Script de datos iniciales para Supabase</h1>
+    <p>Este SQL sale de <code>js/datos.js</code>. Si cambias ese archivo, abre esta página otra vez con Live Server,
+        copia el texto y pégalo en Supabase → SQL Editor.</p>
+    <button type="button" id="copiar">Copiar SQL</button> <span id="estado"></span>
+    <pre id="sql"></pre>
+    <script>
+        function q(texto) {
+            return "'" + String(texto === undefined || texto === null ? "" : texto).replace(/'/g, "''") + "'";
+        }
+
+        // Reparte el stock de una talla entre sus colores.
+        // El color principal (el de la foto) se queda con ~60 %; el resto se divide entre los otros.
+        function repartir(stock, cantidadColores) {
+            if (cantidadColores === 1) {
+                return [stock];
+            }
+            let cadaAlterno = Math.floor(stock * 0.4 / (cantidadColores - 1));
+            let partes = [stock - cadaAlterno * (cantidadColores - 1)];
+            for (let i = 1; i < cantidadColores; i++) {
+                partes.push(cadaAlterno);
+            }
+            return partes;
+        }
+
+        let c = CAMPANA_INICIAL;
+        let productos = productosIniciales(c.fin);
+        let lineas = [];
+        let unidades = 0, filasVariantes = 0;
+
+        lineas.push("-- =====================================================================");
+        lineas.push("--  NOVAK · ETAPA 1 · 02_datos_iniciales.sql  (generado desde js/datos.js)");
+        lineas.push("--  " + CATEGORIAS.length + " categorías · 1 campaña · " + CUPONES_INICIALES.length + " cupones · " + productos.length + " productos");
+        lineas.push("--  Ejecútalo DESPUÉS de 01_tablas.sql.");
+        lineas.push("--  Es seguro ejecutarlo dos veces: 'on conflict do nothing' salta lo que ya existe");
+        lineas.push("--  (y así no pisa los cambios que el admin haya hecho después).");
+        lineas.push("-- =====================================================================");
+        lineas.push("begin;");
+        lineas.push("");
+
+        lineas.push("-- Categorías");
+        lineas.push("insert into public.categorias (id, nombre, segmento, portada, orden) values");
+        lineas.push(CATEGORIAS.map(function (cat, i) {
+            return "    (" + [q(cat.id), q(cat.nombre), q(cat.segmento), q(cat.portada), i + 1].join(", ") + ")";
+        }).join(",\n") + "\non conflict (id) do nothing;");
+        lineas.push("");
+
+        lineas.push("-- Campaña (id 1)");
+        lineas.push("insert into public.campanas (id, nombre, subtitulo, inicio, fin, stock_minimo, activa) values");
+        lineas.push("    (1, " + [q(c.nombre), q(c.subtitulo), q(c.inicio), q(c.fin), c.stockMinimo, "true"].join(", ") + ")");
+        lineas.push("on conflict (id) do nothing;");
+        lineas.push("select setval(pg_get_serial_sequence('public.campanas', 'id'), (select max(id) from public.campanas));");
+        lineas.push("");
+
+        lineas.push("-- Cupones");
+        lineas.push("insert into public.cupones (codigo, tipo, valor, minimo, activo, descripcion) values");
+        lineas.push(CUPONES_INICIALES.map(function (cu) {
+            return "    (" + [q(cu.codigo), q(cu.tipo), cu.valor, cu.minimo, cu.activo, q(cu.descripcion)].join(", ") + ")";
+        }).join(",\n") + "\non conflict (codigo) do nothing;");
+        lineas.push("");
+
+        lineas.push("-- Productos");
+        lineas.push("insert into public.productos (id, sku, nombre, categoria_id, genero, descripcion, detalle, precio, descuento,");
+        lineas.push("    campana_id, oferta_hasta, imagen, especificaciones, nuevo) values");
+        lineas.push(productos.map(function (p) {
+            // Las ofertas iniciales pertenecen a la campaña: toman sus fechas de ahí
+            let campana = p.descuento > 0 ? "1" : "null";
+            return "    (" + [q(p.id), q(p.sku), q(p.nombre), q(p.categoria), q(p.genero), q(p.descripcion), q(p.detalle),
+                p.precio.toFixed(2), p.descuento, campana, "null", q(p.imagen),
+                q(JSON.stringify(p.especificaciones)) + "::jsonb", p.nuevo].join(", ") + ")";
+        }).join(",\n") + "\non conflict (id) do nothing;");
+        lineas.push("");
+
+        lineas.push("-- Variantes: stock por talla y color");
+        lineas.push("insert into public.variantes (producto_id, talla, color, color_hex, stock, orden_talla, orden_color) values");
+        let filas = [];
+        productos.forEach(function (p) {
+            Object.keys(p.stockTallas).forEach(function (talla, iTalla) {
+                let partes = repartir(Number(p.stockTallas[talla]) || 0, p.colores.length);
+                p.colores.forEach(function (color, iColor) {
+                    unidades += partes[iColor];
+                    filas.push("    (" + [q(p.id), q(talla), q(color.nombre), q(color.hex), partes[iColor], iTalla, iColor].join(", ") + ")");
+                });
+            });
+        });
+        filasVariantes = filas.length;
+        lineas.push(filas.join(",\n") + "\non conflict (producto_id, talla, color) do nothing;");
+        lineas.push("");
+        lineas.push("commit;");
+        lineas.push("");
+        lineas.push("-- Comprobación: deberías ver " + productos.length + " productos, " + filasVariantes + " variantes y " + unidades + " unidades.");
+        lineas.push("select (select count(*) from public.productos) as productos,");
+        lineas.push("       (select count(*) from public.variantes) as variantes,");
+        lineas.push("       (select sum(stock) from public.variantes) as unidades;");
+
+        let sql = lineas.join("\n");
+        document.getElementById("sql").textContent = sql;
+        document.getElementById("estado").textContent = productos.length + " productos · " + filasVariantes + " variantes · " + unidades + " unidades";
+        document.getElementById("copiar").addEventListener("click", function () {
+            navigator.clipboard.writeText(sql).then(function () {
+                document.getElementById("estado").textContent = "Copiado. Pégalo en Supabase → SQL Editor.";
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>NOVAK · Probar conexión con Supabase</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 24px; color: #1b1b1f; }
+        .ok { color: #2f6b45; } .error { color: #c62b35; }
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; }
+        dt { font-weight: 700; }
+    </style>
+    <!-- Herramienta interna: NO se publica en la tienda. -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/datos.js"></script>
+    <script src="../js/supabase.js"></script>
+</head>
+<body>
+    <h1>Prueba de conexión</h1>
+    <p id="estado">Conectando…</p>
+    <dl id="resumen"></dl>
+    <script>
+        (async function () {
+            let estado = document.getElementById("estado");
+            try {
+                let r = await probarConexion();
+                estado.className = "ok";
+                estado.textContent = "Conexión correcta. Estos datos vienen de tu base en Supabase:";
+                document.getElementById("resumen").innerHTML = Object.keys(r).map(function (k) {
+                    return "<dt>" + k + "</dt><dd>" + r[k] + "</dd>";
+                }).join("");
+            } catch (error) {
+                estado.className = "error";
+                estado.textContent = error.message + " — revisa SUPABASE_URL y SUPABASE_KEY en js/supabase.js y que ejecutaste los dos SQL.";
+            }
+        })();
+    </script>
+</body>
+</html>

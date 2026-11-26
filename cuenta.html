@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tus pedidos, favoritos y datos en NOVAK.">
+    <meta name="theme-color" content="#1f2038">
+    <title>Mi cuenta - NOVAK</title>
+    <link rel="canonical" href="https://www.novak.pe/cuenta.html">
+    <!-- Vista previa al compartir en redes (Open Graph / X) -->
+    <meta property="og:site_name" content="NOVAK">
+    <meta property="og:locale" content="es_PE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mi cuenta - NOVAK">
+    <meta property="og:description" content="Tus pedidos, favoritos y datos en NOVAK.">
+    <meta property="og:url" content="https://www.novak.pe/cuenta.html">
+    <meta property="og:image" content="https://www.novak.pe/img/hoodies-08.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Tema claro/oscuro: se aplica antes de pintar la página para evitar parpadeos -->
+    <script>
+        try {
+            var tema = JSON.parse(localStorage.getItem("novak_tema") || "null") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro");
+            document.documentElement.dataset.tema = tema;
+        } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Orden de los scripts: datos -> núcleo -> estadísticas -> administrador -> páginas -->
+    <!-- Supabase: librería oficial + nuestra conexión (deben ir antes de app.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="js/datos.js" defer></script>
+    <script src="js/supabase.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/estadisticas.js" defer></script>
+    <script src="js/admin.js" defer></script>
+    <script src="js/tienda.js" defer></script>
+</head>
+
+<body data-pagina="cuenta">
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+    <!-- CABECERA: la dibuja js/app.js para que sea igual en todas las páginas -->
+    <header class="cabecera" id="cabecera"></header>
+
+    <main id="contenido">
+        <div class="contenedor pagina-cuenta">
+            <div id="cuenta-contenido"></div>
+        </div>
+    </main>
+
+    <!-- PIE DE PÁGINA: lo dibuja js/app.js -->
+    <footer class="pie" id="pie"></footer>
+</body>
+
+</html>

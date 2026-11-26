@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Libro de Reclamaciones virtual de NOVAK conforme al Código de Protección y Defensa del Consumidor.">
+    <meta name="theme-color" content="#1f2038">
+    <title>Libro de Reclamaciones - NOVAK</title>
+    <link rel="canonical" href="https://www.novak.pe/libro-reclamaciones.html">
+    <!-- Vista previa al compartir en redes (Open Graph / X) -->
+    <meta property="og:site_name" content="NOVAK">
+    <meta property="og:locale" content="es_PE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Libro de Reclamaciones - NOVAK">
+    <meta property="og:description" content="Libro de Reclamaciones virtual de NOVAK conforme al Código de Protección y Defensa del Consumidor.">
+    <meta property="og:url" content="https://www.novak.pe/libro-reclamaciones.html">
+    <meta property="og:image" content="https://www.novak.pe/img/hoodies-08.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Tema claro/oscuro: se aplica antes de pintar la página para evitar parpadeos -->
+    <script>
+        try {
+            var tema = JSON.parse(localStorage.getItem("novak_tema") || "null") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro");
+            document.documentElement.dataset.tema = tema;
+        } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Orden de los scripts: datos -> núcleo -> estadísticas -> administrador -> páginas -->
+    <!-- Supabase: librería oficial + nuestra conexión (deben ir antes de app.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="js/datos.js" defer></script>
+    <script src="js/supabase.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/estadisticas.js" defer></script>
+    <script src="js/admin.js" defer></script>
+    <script src="js/tienda.js" defer></script>
+</head>
+
+<body data-pagina="reclamos">
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+    <!-- CABECERA: la dibuja js/app.js para que sea igual en todas las páginas -->
+    <header class="cabecera" id="cabecera"></header>
+
+    <main id="contenido">
+        <div class="banner-pagina">
+            <div class="contenedor">
+                <h1>Libro de Reclamaciones</h1>
+                <p>Conforme a lo establecido en el Código de Protección y Defensa del Consumidor (Ley N.° 29571)</p>
+            </div>
+        </div>
+        <section class="seccion">
+            <div class="contenedor">
+                <div class="caja-formulario ancho hoja-reclamacion">
+                    <div id="constancia" hidden></div>
+                    <div id="hoja-formulario">
+                        <div class="hoja-cabecera">
+                            <div>
+                                <p><b>Hoja de reclamación N.° <span id="numero-hoja"></span></b></p>
+                                <p>Fecha: <span id="fecha-hoja"></span></p>
+                            </div>
+                            <div>
+                                <p><b data-empresa="razonSocial"></b><span id="linea-ruc"> · RUC <span data-empresa="ruc"></span></span></p>
+                                <p data-empresa="direccion"></p>
+                            </div>
+                        </div>
+                        <form id="form-reclamo" novalidate>
+                            <fieldset>
+                                <legend>1. Identificación del consumidor reclamante</legend>
+                                <div class="grupo-formulario"><label for="rNombre">Nombre completo</label><input id="rNombre" name="nombre" autocomplete="name"></div>
+                                <div class="fila-doble">
+                                    <div class="grupo-formulario"><label for="rTipoDoc">Documento</label><select id="rTipoDoc" name="tipoDocumento"><option>DNI</option><option>Carné de extranjería</option><option>Pasaporte</option></select></div>
+                                    <div class="grupo-formulario"><label for="rDoc">Número</label><input id="rDoc" name="documento" inputmode="numeric"></div>
+                                </div>
+                                <div class="grupo-formulario"><label for="rDomicilio">Domicilio</label><input id="rDomicilio" name="domicilio" autocomplete="street-address"></div>
+                                <div class="fila-doble">
+                                    <div class="grupo-formulario"><label for="rTelefono">Teléfono</label><input id="rTelefono" name="telefono" type="tel"></div>
+                                    <div class="grupo-formulario"><label for="rCorreo">Correo (aquí enviaremos la respuesta)</label><input id="rCorreo" name="correo" type="email"></div>
+                                </div>
+                                <label class="casilla"><input type="checkbox" name="menor"> Soy menor de edad</label>
+                                <div class="grupo-formulario" id="campos-apoderado" hidden><label for="rApoderado">Nombre del padre, madre o apoderado</label><input id="rApoderado" name="apoderado"></div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>2. Identificación del bien contratado</legend>
+                                <div class="fila-triple">
+                                    <div class="grupo-formulario"><label for="rTipoBien">Tipo</label><select id="rTipoBien" name="tipoBien"><option>Producto</option><option>Servicio</option></select></div>
+                                    <div class="grupo-formulario"><label for="rMonto">Monto reclamado (S/)</label><input id="rMonto" name="monto" type="number" min="0" step="0.01"></div>
+                                    <div class="grupo-formulario"><label for="rPedido">N.° de pedido (si tienes)</label><input id="rPedido" name="numeroPedido" placeholder="NV-..."></div>
+                                </div>
+                                <div class="grupo-formulario"><label for="rDescBien">Descripción</label><input id="rDescBien" name="descripcionBien" placeholder="Ej. Hoodie oversize terracota, talla M"></div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>3. Detalle de la reclamación y pedido del consumidor</legend>
+                                <div class="opciones">
+                                    <label class="chip-opcion"><input type="radio" name="tipo" value="reclamo" checked><span>Reclamo</span></label>
+                                    <label class="chip-opcion"><input type="radio" name="tipo" value="queja"><span>Queja</span></label>
+                                </div>
+                                <p class="nota"><b>Reclamo:</b> disconformidad relacionada con los productos o servicios. <b>Queja:</b> disconformidad no relacionada con los productos o servicios, o malestar respecto a la atención al público.</p>
+                                <div class="grupo-formulario"><label for="rDetalle">Detalle</label><textarea id="rDetalle" name="detalle" rows="4"></textarea></div>
+                                <div class="grupo-formulario"><label for="rSolicitud">Pedido (qué solicitas)</label><textarea id="rSolicitud" name="pedido" rows="2"></textarea></div>
+                            </fieldset>
+                            <label class="casilla"><input type="checkbox" name="conformidad"> <span>Declaro ser el titular del servicio y acepto el contenido del presente formulario, manifestando bajo declaración jurada la veracidad de los hechos descritos.</span></label>
+                            <p class="nota">La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito previo para interponer una denuncia ante el Indecopi. El proveedor deberá dar respuesta al reclamo o queja en un plazo no mayor a quince (15) días hábiles improrrogables.</p>
+                            <button type="submit" class="boton">Enviar hoja de reclamación</button>
+                            <p class="mensaje" role="alert" hidden></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA: lo dibuja js/app.js -->
+    <footer class="pie" id="pie"></footer>
+</body>
+
+</html>

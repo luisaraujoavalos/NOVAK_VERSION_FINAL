@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Términos y condiciones, política de privacidad, envíos, cambios y devoluciones, y términos de promociones de NOVAK.">
+    <meta name="theme-color" content="#1f2038">
+    <title>Términos, privacidad y cambios - NOVAK</title>
+    <link rel="canonical" href="https://www.novak.pe/politicas.html">
+    <!-- Vista previa al compartir en redes (Open Graph / X) -->
+    <meta property="og:site_name" content="NOVAK">
+    <meta property="og:locale" content="es_PE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Términos, privacidad y cambios - NOVAK">
+    <meta property="og:description" content="Términos y condiciones, política de privacidad, envíos, cambios y devoluciones, y términos de promociones de NOVAK.">
+    <meta property="og:url" content="https://www.novak.pe/politicas.html">
+    <meta property="og:image" content="https://www.novak.pe/img/hoodies-08.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Tema claro/oscuro: se aplica antes de pintar la página para evitar parpadeos -->
+    <script>
+        try {
+            var tema = JSON.parse(localStorage.getItem("novak_tema") || "null") ||
+                (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro");
+            document.documentElement.dataset.tema = tema;
+        } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Orden de los scripts: datos -> núcleo -> estadísticas -> administrador -> páginas -->
+    <!-- Supabase: librería oficial + nuestra conexión (deben ir antes de app.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="js/datos.js" defer></script>
+    <script src="js/supabase.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/estadisticas.js" defer></script>
+    <script src="js/admin.js" defer></script>
+    <script src="js/tienda.js" defer></script>
+</head>
+
+<body data-pagina="politicas">
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+    <!-- CABECERA: la dibuja js/app.js para que sea igual en todas las páginas -->
+    <header class="cabecera" id="cabecera"></header>
+
+    <main id="contenido">
+        <div class="banner-pagina">
+            <div class="contenedor">
+                <h1>Políticas de NOVAK</h1>
+                <p>Última actualización: 25 de noviembre de 2026</p>
+            </div>
+        </div>
+        <section class="seccion">
+            <div class="contenedor politicas">
+                <nav class="indice-politicas" aria-label="Contenido">
+                    <a href="#terminos">Términos y condiciones</a>
+                    <a href="#privacidad">Política de privacidad</a>
+                    <a href="#envios">Envíos</a>
+                    <a href="#cambios">Cambios y devoluciones</a>
+                    <a href="#promociones">Promociones y cupones</a>
+                    <a href="libro-reclamaciones.html">Libro de Reclamaciones</a>
+                </nav>
+                <div class="texto-legal">
+                    <!-- Texto base: hazlo revisar por un abogado y completa los datos reales de tu empresa antes de publicar. -->
+                    <article id="terminos">
+                        <h2>Términos y condiciones</h2>
+                        <!-- EDITA: escribe quién opera la tienda (tu nombre o empresa, y tu RUC cuando lo tengas) -->
+                        <p>Este sitio es operado por NOVAK. Al comprar en este sitio aceptas estos términos.</p>
+                        <h3>Precios y pagos</h3>
+                        <p>Los precios están en soles (S/) e incluyen IGV. El precio final, con descuentos y costo de envío, se muestra antes de pagar. Aceptamos transferencia bancaria y pago contra entrega en efectivo (solo Lima). Los pedidos por transferencia se preparan cuando confirmamos el pago.</p>
+                        <h3>Confirmación del pedido</h3>
+                        <p>Al finalizar la compra recibirás un número de pedido (NV-) por correo. Si un producto se agota después de tu pago, te avisaremos y te devolveremos el importe completo por el mismo medio de pago.</p>
+                        <h3>Comprobantes</h3>
+                        <p>Emitimos boleta o factura electrónica, que se envía al correo registrado.</p>
+                    </article>
+                    <article id="privacidad">
+                        <h2>Política de privacidad</h2>
+                        <p>Tratamos tus datos personales conforme a la Ley N.° 29733, Ley de Protección de Datos Personales, y su reglamento.</p>
+                        <h3>Qué datos usamos y para qué</h3>
+                        <ul>
+                            <li>Nombre, documento, correo, teléfono y dirección: para procesar y entregar tus pedidos y emitir comprobantes.</li>
+                            <li>Fecha de nacimiento, talla y preferencias: para recomendarte prendas y mejorar nuestro catálogo.</li>
+                            <li>Historial de compras y productos vistos: para mostrarte productos relacionados y medir qué funciona en la tienda.</li>
+                            <li>Correo para novedades: solo si lo autorizas; puedes darte de baja cuando quieras.</li>
+                        </ul>
+                        <h3>Datos de pago</h3>
+                        <p>Los datos de tu tarjeta los procesa la pasarela de pago. NOVAK no almacena el número completo ni el código de seguridad.</p>
+                        <h3>Tus derechos</h3>
+                        <p>Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición escribiendo a contacto@novak.pe con el asunto "Datos personales" y una copia de tu documento. Responderemos en los plazos que establece la ley.</p>
+                    </article>
+                    <article id="envios">
+                        <h2>Envíos</h2>
+                        <div class="tabla-scroll">
+                            <table class="tabla-chica">
+                                <thead><tr><th scope="col">Destino</th><th scope="col">Costo</th><th scope="col">Plazo</th></tr></thead>
+                                <tbody>
+                                    <tr><th scope="row">Lima Metropolitana y Callao</th><td>S/ 10.00</td><td>24 a 48 horas hábiles</td></tr>
+                                    <tr><th scope="row">Provincias</th><td>S/ 18.00</td><td>3 a 5 días hábiles</td></tr>
+                                    <tr><th scope="row">Retiro en tienda</th><td>Gratis</td><td>Listo en 24 horas</td></tr>
+                                    <tr><th scope="row">Compras desde S/ 199 (después de descuentos)</th><td>Gratis</td><td>Mismos plazos</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p>Los plazos se cuentan desde la confirmación del pago. Puedes revisar el estado en <a href="seguimiento.html">Seguimiento de pedido</a>.</p>
+                    </article>
+                    <article id="cambios">
+                        <h2>Cambios y devoluciones</h2>
+                        <ul>
+                            <li>Tienes 30 días calendario desde que recibes tu pedido para cambiar talla o color, sin costo.</li>
+                            <li>La prenda debe estar sin usar, sin lavar y con sus etiquetas. Por higiene, no aceptamos cambios de ropa de baño usada.</li>
+                            <li>Si prefieres la devolución del dinero, la hacemos por el mismo medio de pago en un máximo de 15 días hábiles desde que recibimos la prenda.</li>
+                            <li>Si la prenda llegó con fallas, el cambio o la devolución es gratis y nosotros recogemos el producto.</li>
+                        </ul>
+                        <p>Para iniciar un cambio escríbenos por WhatsApp o a contacto@novak.pe con tu número de pedido. También puedes acercarte a cualquiera de nuestras tiendas.</p>
+                    </article>
+                    <article id="promociones">
+                        <h2>Promociones y cupones</h2>
+                        <p id="promo-vigente" class="caja-cip"></p>
+                        <ul>
+                            <li>Cada promoción indica su fecha de inicio, su fecha de término y el stock mínimo disponible. Si el stock se agota antes, la promoción termina para ese producto.</li>
+                            <li>El descuento se muestra aplicado en el precio. Al terminar la campaña, los precios vuelven a su valor normal automáticamente.</li>
+                            <li>Cupones: NOVAK10 (10% en toda la tienda), BIENVENIDA15 (15% en compras desde S/ 150), GENZ20 (S/ 20 menos en compras desde S/ 120) y ENVIOGRATIS (envío gratis). Se usa un cupón por pedido y se puede combinar con productos en oferta.</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA: lo dibuja js/app.js -->
+    <footer class="pie" id="pie"></footer>
+</body>
+
+</html>
